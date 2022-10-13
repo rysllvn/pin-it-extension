@@ -14,7 +14,7 @@ module.exports = {
   entry: {
     popup: path.resolve('src/popup/popup.tsx'),
     content: path.resolve('src/content_scripts/content.ts'),
-    service: path.resolve('src/service_workers/service.ts'),
+    background: path.resolve('src/background_scripts/background.ts'),
   },
   module: {
     rules: [
