@@ -1,10 +1,7 @@
-let container: HTMLElement;
-let clone: HTMLElement;
-
 export function pinElement(element: HTMLElement) {
   // create elements
-  container = document.createElement('div');
-  clone = element.cloneNode(true) as HTMLElement;
+  const container = document.createElement('div');
+  const clone = element.cloneNode(true) as HTMLElement;
   const clientRect = element.getBoundingClientRect();
 
   // style container
@@ -18,6 +15,7 @@ export function pinElement(element: HTMLElement) {
     border-radius: 4px;
     padding: 5px;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center; 
   `;
@@ -29,6 +27,9 @@ export function pinElement(element: HTMLElement) {
 
   // add controls
   const controlsDiv = document.createElement('div');
+  controlsDiv.style.cssText = `
+    display: flex;
+  `;
 
   const removeButton = document.createElement('removeButton');
   removeButton.textContent = 'remove';
@@ -36,17 +37,49 @@ export function pinElement(element: HTMLElement) {
     container.remove();
   };
 
+  let x: number;
+  let y: number;
+  let left: number;
+  let top: number;
+  function handleMouseDown(event: MouseEvent) {
+    document.body.style.cursor = 'grabbing'
+    x = event.x;
+    y = event.y;
+    left = container.getBoundingClientRect().left;
+    top = container.getBoundingClientRect().top;
+    console.log(container.getBoundingClientRect(), x);
+    document.body.addEventListener('mousemove', handleMouseMove);
+  }
+  
+  function handleMouseMove(event: MouseEvent) {
+    const dx = event.x - x;
+    const dy = event.y - y;
+
+    container.style.left = `${left + dx}px`;
+    container.style.top = `${top + dy}px`;
+
+    dragBar.addEventListener('mouseup', handleMouseUp, { once: true });
+  }
+
+  function handleMouseUp(event: MouseEvent) {
+    console.log(x, event.x)
+    document.body.removeEventListener('mousemove', handleMouseMove);
+  }
+
   const dragBar = document.createElement('div');
-  dragBar.style.width = '100%';
-  dragBar.style.height = '10px';
-  dragBar.style.backgroundColor = 'black';
+  dragBar.style.cssText = `
+    flex-grow: 1;
+    border: 1px solid black;
+    cursor: grab;
+  `;
+  dragBar.textContent = 'dragbar';
   dragBar.addEventListener('mousedown', handleMouseDown);
 
   controlsDiv.appendChild(dragBar);
   controlsDiv.appendChild(removeButton);
 
   container.addEventListener('mouseenter', () => {
-    controlsDiv.style.display = 'block';
+    controlsDiv.style.display = 'flex';
   });
   container.addEventListener('mouseleave', () => {
     controlsDiv.style.display = 'none';
@@ -59,12 +92,4 @@ export function pinElement(element: HTMLElement) {
 
   // finally add container to the document
   document.body.prepend(container);
-}
-
-function handleMouseDown() {
-  
-}
-
-function handleMouseMove(event: MouseEvent) {
-  console.log(event);
 }
