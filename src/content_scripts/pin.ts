@@ -2,12 +2,13 @@ export function pinElement(element: HTMLElement) {
   // create elements
   const container = document.createElement('div');
   const clone = element.cloneNode(true) as HTMLElement;
-
+  const clientRect = element.getBoundingClientRect();
+  console.log(clientRect);
   // style container
   container.style.cssText = `
     position: fixed;
-    top: 20px;
-    left: 20px;
+    top: ${clientRect.top}px;
+    left: ${clientRect.left}px;
     z-index: 200000;
     background-color: white;
     border: 1px solid black;
