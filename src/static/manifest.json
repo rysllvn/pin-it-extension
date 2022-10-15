@@ -3,25 +3,16 @@
   "name": "Pin It",
   "version": "1.0",
 
-  "permissions": ["contextMenus"],
+  "permissions": ["activeTab"],
 
   "browser_action": {
     "default_icon": "pin-48.png",
-    "_default_icon": "https://freeicons.io/basic-ui-elements-3/basic-pin-icon-14160#",
-    "default_title": "Pin It",
-    "default_popup": "popup.html"
+    "default_title": "Pin It"
   },
 
   "background": {
     "scripts": [
         "background.js"
     ]
-  },
-
-  "content_scripts": [
-    {
-      "matches": ["<all_urls>"],
-      "js": ["content.js"]
-    }
-  ]
+  }
 }

@@ -1,40 +1,36 @@
-import { cloneElement } from 'react';
-import { ADD_PIN } from '../utility/constants';
-
-console.log('hello from content.ts');
+import { PinnedElement } from './pin';
 
 let savedBorderStyle = 'unset';
+let savedCursorStyle = 'unset';
 
-browser.runtime.onMessage.addListener((message) => {
-  console.clear();
-  console.log(message);
-  switch (message) {
-    case ADD_PIN:
-      document.body.addEventListener('mousemove', (event) => {
-        if (savedBorderStyle !== 'unset') return;
+const handleMouseMove = (event: MouseEvent) => {
+  if (savedBorderStyle !== 'unset') return;
 
-        const target = event.target as HTMLElement;
-        savedBorderStyle = getComputedStyle(target).border;
-        target.style.border = '2px solid red';
+  const target = event.target as HTMLElement;
+  savedBorderStyle = getComputedStyle(target).border;
+  savedCursorStyle = getComputedStyle(target).cursor;
+  target.style.border = '2px solid red';
+  target.style.cursor = 'crosshair';
 
-        target.addEventListener('click', (event) => {
-          const element = event.target as HTMLElement;
-          const container = document.createElement('div');
-          container.appendChild(element.cloneNode(true));
-          document.body.prepend(container);
-          container.style.backgroundColor = 'white';
-          container.style.position = 'fixed';
-          container.style.zIndex = '200000';
-          container.style.top = '0';
-        });
-        target.addEventListener('mouseout', (event) => {
-          const target = event.target as HTMLElement;
-          target.style.border = savedBorderStyle;
-          savedBorderStyle = 'unset';
-        });
-      });
-      break;
-    default:
-      throw new Error('unknown  message');
-  }
-});
+  target.addEventListener('mouseout', (event) => {
+    const target = event.target as HTMLElement;
+    target.style.border = savedBorderStyle;
+    target.style.cursor = savedCursorStyle;
+    savedBorderStyle = 'unset';
+  });
+};
+
+const handleClick = (event: MouseEvent) => {
+  event.preventDefault();
+  event.stopImmediatePropagation();
+
+  const element = event.target as HTMLElement;
+  element.style.border = savedBorderStyle;
+  const pinned = new PinnedElement(element);
+
+  document.body.removeEventListener('mousemove', handleMouseMove);
+};
+
+
+document.body.addEventListener('mousemove', handleMouseMove);
+document.body.addEventListener('click', handleClick, { capture: true, once: true });

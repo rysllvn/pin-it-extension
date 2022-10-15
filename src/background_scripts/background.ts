@@ -1,10 +1,23 @@
-console.log('hello from service.ts');
+let selecting = false;
+let injected = false;
 
-browser.contextMenus.create({
-  id: "copy-link-to-clipboard",
-  title: "Pin link",
-  contexts: ["all"],
-});
-browser.contextMenus.onClicked.addListener((info, tab) => {
-  console.log(info, tab);
-});
+const handleClick = () => {
+  if (selecting) {
+    selecting = false;
+    browser.runtime.sendMessage('cancel');
+    return;
+  }
+  if (injected) {
+    browser.runtime.sendMessage('select');
+    selecting = true;
+  }
+  selecting = true;
+  browser.tabs.executeScript({
+    file: './content.js'
+  });
+};
+const handleMessage = () => {
+  selecting = false;
+};
+browser.runtime.onMessage.addListener(handleMessage)
+browser.browserAction.onClicked.addListener(handleClick);
