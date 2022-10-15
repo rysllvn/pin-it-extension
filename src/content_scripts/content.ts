@@ -1,9 +1,14 @@
-import { PinnedElement } from './pin';
-
+import { pinElement } from './pin';
 let savedBorderStyle = 'unset';
 let savedCursorStyle = 'unset';
 
-const handleMouseMove = (event: MouseEvent) => {
+function resetStyles(element: HTMLElement) {
+  element.style.border = savedBorderStyle;
+  element.style.cursor = savedCursorStyle;
+  savedBorderStyle = 'unset';
+}
+
+function handleMouseMove(event: MouseEvent) {
   if (savedBorderStyle !== 'unset') return;
 
   const target = event.target as HTMLElement;
@@ -14,22 +19,23 @@ const handleMouseMove = (event: MouseEvent) => {
 
   target.addEventListener('mouseout', (event) => {
     const target = event.target as HTMLElement;
-    target.style.border = savedBorderStyle;
-    target.style.cursor = savedCursorStyle;
-    savedBorderStyle = 'unset';
+    resetStyles(target)
   });
-};
+}
 
 const handleClick = (event: MouseEvent) => {
   event.preventDefault();
   event.stopImmediatePropagation();
 
-  const element = event.target as HTMLElement;
-  element.style.border = savedBorderStyle;
-  const pinned = new PinnedElement(element);
+  const target = event.target as HTMLElement;
+
+  resetStyles(target);
+  pinElement(target);
 
   document.body.removeEventListener('mousemove', handleMouseMove);
 };
+
+
 
 
 document.body.addEventListener('mousemove', handleMouseMove);
