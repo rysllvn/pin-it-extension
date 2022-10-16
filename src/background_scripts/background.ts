@@ -12,12 +12,13 @@ const handleClick = () => {
     selecting = true;
   }
   selecting = true;
+  injected = true;
   browser.tabs.executeScript({
     file: './content.js'
   });
 };
-const handleMessage = () => {
-  selecting = false;
+const handleMessage = (message: string) => {
+  if (message === 'element selected') selecting = false;
 };
 browser.runtime.onMessage.addListener(handleMessage);
 browser.browserAction.onClicked.addListener(handleClick);
