@@ -11,17 +11,9 @@ module.exports = {
     rules: [
       {
         loader: 'ts-loader',
-        test: /\.tsx?$/,
+        test: /\.ts?$/,
         exclude: /node_modules/,
       },
-      {
-        use: ['style-loader', 'css-loader'],
-        test: /\.css$/i,
-      },
-      {
-        type: 'asset/resource',
-        test: /\.(jpg|jpeg|png|woff|woff2|eot|ttf|svg)$/
-      }, // lets us import these file types directly into tsx files
     ],
   },
   plugins: [
