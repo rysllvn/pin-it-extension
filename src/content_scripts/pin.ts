@@ -10,29 +10,31 @@ export function pinElement(element: HTMLElement) {
     top: ${clientRect.top}px;
     left: ${clientRect.left}px;
     z-index: 200000;
-    background-color: ${getComputedStyle(document.body).backgroundColor};
-    border: 2px solid black;
+    background-color: white;
     border-radius: 4px;
-    padding: 5px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center; 
+    border: 1px solid black;
+    resize: both;
+    overflow: hidden;
+    box-shadow: 2px 2px 1px 1px gray;
+    padding: 4px;
   `;
 
   // style clone
   clone.style.margin = '0';
-  const { width, height, color, backgroundColor, fontSize } = getComputedStyle(element)
-  Object.assign(clone.style, { width, height, color, backgroundColor, fontSize });
+  clone.style.overflowY = 'auto';
+  const { color, backgroundColor, fontSize } = getComputedStyle(element)
+  Object.assign(clone.style, { color, backgroundColor, fontSize });
 
   // add controls
   const controlsDiv = document.createElement('div');
   controlsDiv.style.cssText = `
     display: flex;
+    border-radius: 4px;
+    background-color: white;
   `;
 
   const removeButton = document.createElement('removeButton');
-  removeButton.textContent = 'remove';
+  removeButton.textContent = 'X';
   removeButton.onclick = () => {
     container.remove();
   };
@@ -68,9 +70,9 @@ export function pinElement(element: HTMLElement) {
 
   const dragBar = document.createElement('div');
   dragBar.style.cssText = `
-    flex-grow: 1;
     border: 1px solid black;
     cursor: grab;
+    width: 100%;
   `;
   dragBar.textContent = 'dragbar';
   dragBar.addEventListener('mousedown', handleMouseDown);
@@ -79,10 +81,10 @@ export function pinElement(element: HTMLElement) {
   controlsDiv.appendChild(removeButton);
 
   container.addEventListener('mouseenter', () => {
-    controlsDiv.style.display = 'flex';
+    controlsDiv.style.visibility = 'visible';
   });
   container.addEventListener('mouseleave', () => {
-    controlsDiv.style.display = 'none';
+    controlsDiv.style.visibility = 'hidden';
   });
 
 

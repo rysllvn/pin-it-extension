@@ -19,5 +19,5 @@ const handleClick = () => {
 const handleMessage = () => {
   selecting = false;
 };
-browser.runtime.onMessage.addListener(handleMessage)
+browser.runtime.onMessage.addListener(handleMessage);
 browser.browserAction.onClicked.addListener(handleClick);
