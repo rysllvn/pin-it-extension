@@ -1,81 +1,51 @@
-// styles
-// maybe move to css file, but then need to be careful to namespace all elements properly
-const containerStyle = `
-  position: fixed;
-  z-index: 200000;
-  background-color: white;
-  border-radius: 4px;
-  border: 1px solid black;
-  overflow: hidden;
-  box-shadow: 2px 2px 1px 1px gray;
-  padding: 4px;
-  resize: both;
-  box-sizing: border-box;
-`;
-const controlsStyle = `
-  display: flex;
-  background-color: white;
-  border-bottom: 1px solid grey;
-  margin-bottom: 8px;
-`;
-const removeButtonStyle = `
-  font-size: 20px;
-  font-weight: 600;
-  cursor: pointer;
-`;
-const dragDivStyle = `
-  cursor: grab;
-  width: 100%;
-`;
-const cloneStyle = `
-  margin: 0;
-  position: relative;
-  top: 0;
-  left: 0;
-`;
-
 // contains logic to remove self from the document
 export function createPinnedElement(element: HTMLElement) {
   // create elements
   const containerDiv = document.createElement('div');
-  const controlsDiv = document.createElement('div');
-  const removeButton = document.createElement('removeButton');
-  const dragDiv = document.createElement('div');
-  const clone = element.cloneNode(true) as HTMLElement;
+  containerDiv.className = 'pin-it-container';
 
-  // style elements
-  // style container
+  const clone = element.cloneNode(true) as HTMLElement;
+  clone.classList.add('clone');
+
+  const controlsDiv = document.createElement('div');
+  controlsDiv.className = 'controls';
+
+  const dragDiv = document.createElement('div');
+  dragDiv.className = 'drag';
+
+  const removeButton = document.createElement('div');
+  removeButton.innerHTML = '&times;'
+  removeButton.className = 'remove-button';
+
+  // position container
   const clientRect = element.getBoundingClientRect();
-  containerDiv.style.cssText = containerStyle;
   containerDiv.style.top = `${clientRect.top}px`;
   containerDiv.style.left = `${clientRect.left}px`;
 
-  // style clone - this only styles the top level node
-  // traverse all children and style is a good improvement to do later
-  clone.style.cssText = cloneStyle;
-  const { color, backgroundColor, fontSize } = getComputedStyle(element)
-  Object.assign(clone.style, { color, backgroundColor, fontSize });
 
-  // style controls
-  controlsDiv.style.cssText = controlsStyle
-  // style remove
-  removeButton.innerHTML = '&times;';
-  removeButton.style.cssText = removeButtonStyle;
-  // style dragDiv
-  dragDiv.style.cssText = dragDivStyle;
+  // Possible improvements for clone styling listed below:
+  // 1. try and preserve some clone styling and of the children that is dependent on
+  //    the location in the DOM
+  // 2. traverse all children and do the same
+  // 3. absolutely positioned children are sometimes an issue.
+  //    maybe check boundingClientRect to see if any elements are above the clone.
+  //    This is the main issue if they use position absolute with top: -10px for example
+  clone.style.position = 'relative';
+  clone.style.top = '0';
+  clone.style.left = '0';
+  clone.style.margin = `0`;
 
-
-  // variables to help with dragging
-  let x: number;
-  let y: number;
+  // variables to help with drag computations;
+  let initialX: number;
+  let initialY: number;
   let left: number;
   let top: number;
 
   // event handlers for dragging
   function handleMouseDown(event: MouseEvent) {
     dragDiv.style.cursor = 'grabbing'
-    x = event.x;
-    y = event.y;
+    initialX = event.x;
+    initialY = event.y;
     left = containerDiv.getBoundingClientRect().left;
     top = containerDiv.getBoundingClientRect().top;
     const containerRect = containerDiv.getBoundingClientRect();
@@ -85,8 +55,8 @@ export function createPinnedElement(element: HTMLElement) {
   }
   
   function handleMouseMove(event: MouseEvent) {
-    const dx = event.x - x;
-    const dy = event.y - y;
+    const dx = event.x - initialX;
+    const dy = event.y - initialY;
 
     containerDiv.style.left = `${left + dx}px`;
     containerDiv.style.top = `${top + dy}px`;
@@ -98,7 +68,6 @@ export function createPinnedElement(element: HTMLElement) {
     dragDiv.style.cursor = 'grab'
     document.body.removeEventListener('mousemove', handleMouseMove);
   }
-
 
   // register listeners
   dragDiv.addEventListener('mousedown', handleMouseDown);
@@ -112,7 +81,6 @@ export function createPinnedElement(element: HTMLElement) {
   containerDiv.appendChild(controlsDiv);
   containerDiv.appendChild(clone);
 
-  
   // finally add containerDiv to the document
   document.body.prepend(containerDiv);
 }
