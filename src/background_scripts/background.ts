@@ -1,24 +1,8 @@
-let selecting = false;
-let injected = false;
-
-const handleClick = () => {
-  if (selecting) {
-    selecting = false;
-    browser.runtime.sendMessage('cancel');
-    return;
-  }
-  if (injected) {
-    browser.runtime.sendMessage('select');
-    selecting = true;
-  }
-  selecting = true;
-  injected = true;
-  browser.tabs.executeScript({
-    file: './content.js'
-  });
-};
-const handleMessage = (message: string) => {
-  if (message === 'element selected') selecting = false;
-};
-browser.runtime.onMessage.addListener(handleMessage);
-browser.browserAction.onClicked.addListener(handleClick);
+browser.browserAction.onClicked.addListener(() => {
+  browser.tabs.query({currentWindow: true, active: true})
+    .then(tabs => {
+      if (typeof tabs[0] !== 'undefined' && typeof tabs[0].id === 'number') {
+        browser.tabs.sendMessage(tabs[0].id, 'toggle');
+      }
+    })
+});

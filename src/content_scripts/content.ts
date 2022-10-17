@@ -1,9 +1,8 @@
 import { createPinnedElement } from './pin';
 
-console.log('hello from content.ts');
 
 // environment variables
-let firstRun = true;
+let waiting = true;
 let savedBorderStyle = 'unset';
 let savedCursorStyle = 'unset';
 let currentStyledElement: HTMLElement;
@@ -48,27 +47,26 @@ const handleClick = (event: MouseEvent) => {
   browser.runtime.sendMessage('element selected');
 
   document.body.removeEventListener('mousemove', handleMouseMove);
+  waiting = true;
 };
 
 // add document event listeners
+const clickOptions = { capture: true, once: true };
 function registerEventListeners() {
+  waiting = false;
   document.body.addEventListener('mousemove', handleMouseMove);
-  document.body.addEventListener('click', handleClick, { capture: true, once: true });
+  document.body.addEventListener('click', handleClick, clickOptions);
 }
 
-if (firstRun) {
-  firstRun = false;
-  registerEventListeners();
-  browser.runtime.onMessage.addListener((message: string) => {
-    if (message === 'select') {
-      registerEventListeners()
-    } else if (message === 'cancel') {
-      resetStyles(currentStyledElement);
-      document.body.removeEventListener('mouseout', handleMouseOut);
-      document.body.removeEventListener('mousemove', handleMouseMove);
-      document.body.removeEventListener('click', handleClick);
-    }
-  })
-}
+// handle messages
+browser.runtime.onMessage.addListener((message: string) => {
+  if (message !== 'toggle') return;
 
+  if (waiting) return registerEventListeners();
 
+  waiting = true;
+  resetStyles(currentStyledElement);
+  document.body.removeEventListener('mouseout', handleMouseOut);
+  document.body.removeEventListener('mousemove', handleMouseMove);
+  document.body.removeEventListener('click', handleClick, clickOptions);
+});

@@ -27,6 +27,12 @@ const dragDivStyle = `
   cursor: grab;
   width: 100%;
 `;
+const cloneStyle = `
+  margin: 0;
+  position: relative;
+  top: 0;
+  left: 0;
+`;
 
 // contains logic to remove self from the document
 export function createPinnedElement(element: HTMLElement) {
@@ -46,7 +52,7 @@ export function createPinnedElement(element: HTMLElement) {
 
   // style clone - this only styles the top level node
   // traverse all children and style is a good improvement to do later
-  clone.style.margin = '0';
+  clone.style.cssText = cloneStyle;
   const { color, backgroundColor, fontSize } = getComputedStyle(element)
   Object.assign(clone.style, { color, backgroundColor, fontSize });
 
@@ -75,7 +81,6 @@ export function createPinnedElement(element: HTMLElement) {
     const containerRect = containerDiv.getBoundingClientRect();
     containerDiv.style.width = `${Math.ceil(containerRect.width)}px`;
     containerDiv.style.height = `${Math.ceil(containerRect.height)}px`;
-    console.log(containerRect);
     document.body.addEventListener('mousemove', handleMouseMove);
   }
   
