@@ -5,7 +5,6 @@ export function createPinnedElement(element: HTMLElement) {
   containerDiv.className = 'pin-it-container';
 
   const clone = element.cloneNode(true) as HTMLElement;
-  clone.classList.add('clone');
 
   const controlsDiv = document.createElement('div');
   controlsDiv.className = 'controls';
@@ -30,10 +29,12 @@ export function createPinnedElement(element: HTMLElement) {
   // 3. absolutely positioned children are sometimes an issue.
   //    maybe check boundingClientRect to see if any elements are above the clone.
   //    This is the main issue if they use position absolute with top: -10px for example
-  clone.style.position = 'relative';
-  clone.style.top = '0';
-  clone.style.left = '0';
-  clone.style.margin = `0`;
+  Object.assign(clone.style, {
+    position: 'relative',
+    top: '0',
+    left: '0',
+    margin: '0',
+  });
 
   // variables to help with drag computations;
   let initialX: number;
@@ -43,7 +44,6 @@ export function createPinnedElement(element: HTMLElement) {
 
   // event handlers for dragging
   function handleMouseDown(event: MouseEvent) {
-    dragDiv.style.cursor = 'grabbing'
     initialX = event.x;
     initialY = event.y;
     left = containerDiv.getBoundingClientRect().left;
@@ -65,7 +65,6 @@ export function createPinnedElement(element: HTMLElement) {
   }
 
   function handleMouseUp() {
-    dragDiv.style.cursor = 'grab'
     document.body.removeEventListener('mousemove', handleMouseMove);
   }
 

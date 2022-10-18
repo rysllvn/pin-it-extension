@@ -6,7 +6,7 @@
   "permissions": ["activeTab"],
 
   "browser_action": {
-    "default_icon": "pin-48.png",
+    "default_icon": "office-push-pin.png",
     "default_title": "Pin It"
   },
 
@@ -22,5 +22,9 @@
     "scripts": [
         "background.js"
     ]
-  }
+  },
+
+  "web_accessible_resources": [
+    "office-push-pin.png"
+  ]
 }

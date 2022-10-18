@@ -43,3 +43,8 @@ Containers are removed from the regular flow of the document with the `position:
 ## How to contact me
 
 Using Github is great or email me.
+
+## Credits
+
+<a href="https://www.flaticon.com/free-icons/pin" title="pin icons">Pin icons created by Freepik - Flaticon</a>
+

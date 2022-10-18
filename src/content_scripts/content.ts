@@ -1,19 +1,21 @@
 import { createPinnedElement } from './pin';
 
-
 // environment variables
 let waiting = true;
-let savedBorderStyle = 'unset';
-let savedCursorStyle = 'unset';
+
+type SavedStyle = {
+  border: string;
+  cursor: string;
+  boxShadow: string;
+};
+let savedStyle: 'unset' | SavedStyle = 'unset';
 let currentStyledElement: HTMLElement;
 
 // helper functions
 function resetStyles(element: HTMLElement) {
-  if (savedBorderStyle === 'unset') return;
-  element.style.border = savedBorderStyle;
-  element.style.cursor = savedCursorStyle;
-  savedBorderStyle = 'unset';
-  savedCursorStyle = 'unset';
+  if (savedStyle === 'unset') return;
+  Object.assign(element.style, savedStyle);
+  savedStyle = 'unset';
 }
 
 // event handlers
@@ -24,13 +26,16 @@ function handleMouseOut(event: MouseEvent) {
 }
 
 function handleMouseMove(event: MouseEvent) {
-  if (savedBorderStyle !== 'unset') return;
+  if (savedStyle !== 'unset') return;
 
   const target = event.target as HTMLElement;
-  savedBorderStyle = getComputedStyle(target).border;
-  savedCursorStyle = getComputedStyle(target).cursor;
-  target.style.border = '2px solid red';
-  target.style.cursor = 'crosshair';
+  const { border, cursor, boxShadow } = getComputedStyle(target);
+  savedStyle = { border, cursor, boxShadow };
+  Object.assign(target.style, {
+    border: '1px solid black',
+    boxShadow: '5px 5px 5px black',
+    cursor: 'crosshair',
+  });
 
   target.addEventListener('mouseout', handleMouseOut);
 }
@@ -43,8 +48,6 @@ const handleClick = (event: MouseEvent) => {
 
   resetStyles(target);
   createPinnedElement(target);
-
-  browser.runtime.sendMessage('element selected');
 
   document.body.removeEventListener('mousemove', handleMouseMove);
   waiting = true;
