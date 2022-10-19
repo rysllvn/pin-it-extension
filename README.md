@@ -2,6 +2,21 @@
 
 [Informational Page](https://rysllvn.github.io/pin-it-info-page/)
 
+## Contents
+
+- [Pin It Browser Extension](#pin-it-browser-extension)
+  - [Contents](#contents)
+  - [Goal](#goal)
+  - [What it does](#what-it-does)
+    - [Browser action](#browser-action)
+    - [Selection mode](#selection-mode)
+    - [Containers](#containers)
+      - [Containers can be resized, dragged, and removed.](#containers-can-be-resized-dragged-and-removed)
+  - [What it doesn't do](#what-it-doesnt-do)
+  - [Planned functionality additions](#planned-functionality-additions)
+  - [Building](#building)
+  - [Contact](#contact)
+  - [Credits](#credits)
 ## Goal
 
 Pin it is designed to be a very light weight extension for "pinning" elements to the page.
@@ -38,11 +53,14 @@ Containers are removed from the regular flow of the document with the `position:
  - save text that was pinned
  - option to delete the selected element so that only the clone is on the page
 
-## Development changes
- - The style is completely imperative, which is fine for how small it is. A more declarative style might be nice though before adding any more features.
-   - maybe some sort of jsx pragma to reduce manual createElement calls
+## Building
 
-## How to contact me
+- from root `npm i`
+- then `npm run build`
+- then `cd dist`
+- then `web-ext build`
+
+## Contact
 
 Using Github is great or email me.
 
