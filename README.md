@@ -1,5 +1,7 @@
 # Pin It Browser Extension
 
+[Informational Page](https://rysllvn.github.io/pin-it-info-page/)
+
 ## Goal
 
 Pin it is designed to be a very light weight extension for "pinning" elements to the page.
