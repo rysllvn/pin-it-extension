@@ -32,8 +32,8 @@ function handleMouseMove(event: MouseEvent) {
   const { border, cursor, boxShadow } = getComputedStyle(target);
   savedStyle = { border, cursor, boxShadow };
   Object.assign(target.style, {
-    border: '1px solid black',
-    boxShadow: '5px 5px 5px black',
+    border: '2px solid black',
+    boxShadow: '0 0 5px 5px #ff4500',
     cursor: 'crosshair',
   });
 
