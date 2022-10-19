@@ -46,5 +46,8 @@ Using Github is great or email me.
 
 ## Credits
 
-<a href="https://www.flaticon.com/free-icons/pin" title="pin icons">Pin icons created by Freepik - Flaticon</a>
+Icon by <a href="https://freeicons.io/profile/3277">Gayrat Muminov</a> on <a href="https://freeicons.io">freeicons.io</a>.
+
+I changed the color to orange red (#ff4500) from periwinkle gray (#d3d4ed)
+                                
 
